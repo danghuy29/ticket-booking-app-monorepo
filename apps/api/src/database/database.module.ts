@@ -1,11 +1,17 @@
-import { Global, Inject, Injectable, Module, OnApplicationShutdown } from '@nestjs/common';
-import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
-import { env } from '../config/env';
-import * as schema from './schema';
+import {
+  Global,
+  Inject,
+  Injectable,
+  Module,
+  OnApplicationShutdown,
+} from "@nestjs/common";
+import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { env } from "../config/env";
+import * as schema from "./schemas";
 
-export const PG_CLIENT = Symbol('PG_CLIENT');
-export const DB = Symbol('DB');
+export const PG_CLIENT = Symbol("PG_CLIENT");
+export const DB = Symbol("DB");
 
 export type Database = PostgresJsDatabase<typeof schema>;
 
@@ -13,7 +19,7 @@ export type Database = PostgresJsDatabase<typeof schema>;
 export const InjectDb = () => Inject(DB);
 
 export function createDatabase(client: postgres.Sql): Database {
-  return drizzle(client, { schema, casing: 'snake_case' });
+  return drizzle(client, { schema, casing: "snake_case" });
 }
 
 @Injectable()
