@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["bun"],
+    // NestJS dependency injection relies on legacy decorators + reflect-metadata.
+    // Bun honours both flags at runtime.
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["src", "drizzle.config.ts"]
+}

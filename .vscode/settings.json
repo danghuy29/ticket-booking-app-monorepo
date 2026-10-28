@@ -1,0 +1,22 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+
+  // Don't watch / search / scan dependencies and build output.
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.bun/**": true,
+    "**/dist/**": true,
+    "**/coverage/**": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/bun.lock": true
+  }
+}

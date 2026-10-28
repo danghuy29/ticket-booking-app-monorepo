@@ -1,0 +1,30 @@
+{
+  "name": "ticket-booking-app",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter '@ticket/api' --filter '@ticket/web' dev",
+    "dev:api": "bun run --filter '@ticket/api' dev",
+    "dev:web": "bun run --filter '@ticket/web' dev",
+    "build": "bun run --filter '*' build",
+    "typecheck": "bun run --filter '*' typecheck",
+    "test": "bun run --filter '*' test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "db:up": "docker compose up -d postgres",
+    "db:down": "docker compose down",
+    "db:generate": "bun run --filter '@ticket/api' db:generate",
+    "db:migrate": "bun run --filter '@ticket/api' db:migrate",
+    "db:seed": "bun run --filter '@ticket/api' db:seed",
+    "db:studio": "bun run --filter '@ticket/api' db:studio"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/bun": "^1.4.3",
+    "typescript": "~6.0.3"
+  }
+}
