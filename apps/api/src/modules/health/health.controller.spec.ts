@@ -21,7 +21,7 @@ describe("HealthController (HTTP)", () => {
 
     app = setupApp(moduleRef.createNestApplication());
     await app.listen(0);
-    baseUrl = `${await app.getUrl()}/api`;
+    baseUrl = `${await app.getUrl()}/api/v1`;
   });
 
   afterAll(() => app.close());

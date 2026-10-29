@@ -1,13 +1,17 @@
 import { Injectable } from "@nestjs/common";
+import { type Database, InjectDb } from "../../database/database.module";
+import { users } from "../../database/schemas/user";
 
 @Injectable()
 export class UsersService {
+  constructor(@InjectDb() private readonly db: Database) {}
+
   // create(createUserDto) {
   //   return "This action adds a new user";
   // }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return this.db.select().from(users);
   }
 
   findOne(id: number) {
