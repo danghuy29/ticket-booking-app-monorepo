@@ -9,7 +9,7 @@ Fullstack ticket booking app. Bun workspaces monorepo. See README.md for the ful
 - `apps/web` (`@ticket/web`): React 19, Vite 8, React Router 8 (`react-router` package, data router), TanStack Query 5
 - `packages/shared` (`@ticket/shared`): zod 4 schemas + TS types shared by FE and BE, consumed as TS source (no build)
 - DB: PostgreSQL 18 via `docker-compose.yml`, Drizzle ORM (`postgres` driver) + drizzle-kit migrations
-- Lint/format: Biome (single quotes, semicolons, trailing commas, width 100). No ESLint/Prettier.
+- Lint/format: Biome (double quotes, semicolons, trailing commas, width 100). No ESLint/Prettier.
 
 ## Commands (run from repo root)
 

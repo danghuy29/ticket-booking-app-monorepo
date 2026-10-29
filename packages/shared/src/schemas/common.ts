@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const uuidParamSchema = z.uuid();
 
@@ -23,6 +23,6 @@ export interface ApiErrorBody {
 }
 
 export interface HealthResponse {
-  status: 'ok' | 'error';
-  database: 'up' | 'down';
+  status: "ok" | "error";
+  database: "up" | "down";
 }

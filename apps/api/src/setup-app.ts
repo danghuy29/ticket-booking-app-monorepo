@@ -1,6 +1,6 @@
-import { type INestApplication, StandardSchemaValidationPipe } from '@nestjs/common';
+import { type INestApplication, StandardSchemaValidationPipe } from "@nestjs/common";
 
-export const API_PREFIX = 'api';
+export const API_PREFIX = "api";
 
 /**
  * Global app configuration shared by `main.ts` and tests,

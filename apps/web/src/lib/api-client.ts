@@ -1,6 +1,6 @@
-import type { ApiErrorBody } from '@ticket/shared';
+import type { ApiErrorBody } from "@ticket/shared";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -8,8 +8,8 @@ export class ApiError extends Error {
 
   constructor(status: number, body: ApiErrorBody | null) {
     const message = body?.message;
-    super(Array.isArray(message) ? message.join(', ') : (message ?? `Request failed (${status})`));
-    this.name = 'ApiError';
+    super(Array.isArray(message) ? message.join(", ") : (message ?? `Request failed (${status})`));
+    this.name = "ApiError";
     this.status = status;
     this.body = body;
   }
@@ -18,7 +18,7 @@ export class ApiError extends Error {
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     ...init,
-    headers: { 'content-type': 'application/json', ...init.headers },
+    headers: { "content-type": "application/json", ...init.headers },
   });
 
   if (!res.ok) {
@@ -31,5 +31,5 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 export const api = {
   get: <T>(path: string) => apiFetch<T>(path),
   post: <T>(path: string, body: unknown) =>
-    apiFetch<T>(path, { method: 'POST', body: JSON.stringify(body) }),
+    apiFetch<T>(path, { method: "POST", body: JSON.stringify(body) }),
 };

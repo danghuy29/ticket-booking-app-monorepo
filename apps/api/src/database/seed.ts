@@ -9,9 +9,7 @@ const db = createDatabase(client);
 await db.transaction(async (tx) => {
   await tx
     .insert(users)
-    .values([
-      { name: "huydang", email: "huydang@gmail.com", phone: "+84123456789" },
-    ])
+    .values([{ name: "huydang", email: "huydang@gmail.com", phone: "+84123456789" }])
     .onConflictDoNothing();
 });
 

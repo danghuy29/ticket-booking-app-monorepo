@@ -1,4 +1,4 @@
-import { useHealth } from '../features/health/api';
+import { useHealth } from "../features/health/api";
 
 export function HomePage() {
   const { data, isPending, error } = useHealth();
