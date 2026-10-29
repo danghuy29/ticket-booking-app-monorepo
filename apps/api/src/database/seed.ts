@@ -1,10 +1,13 @@
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
 import { env } from "../config/env";
-import { createDatabase } from "./database.module";
+import * as schema from "./schemas";
 import { users } from "./schemas/user";
 
-const client = postgres(env.DATABASE_URL, { max: 1 });
-const db = createDatabase(client);
+const db = drizzle({
+  connection: { url: env.DATABASE_URL, max: 1 },
+  schema,
+  casing: "snake_case",
+});
 
 await db.transaction(async (tx) => {
   await tx
@@ -14,4 +17,4 @@ await db.transaction(async (tx) => {
 });
 
 console.log("Seed completed.");
-await client.end();
+await db.$client.end();

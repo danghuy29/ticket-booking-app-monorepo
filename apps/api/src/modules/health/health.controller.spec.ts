@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 import type { INestApplication } from "@nestjs/common";
+import { getDrizzleToken } from "@nestjs/drizzle";
 import { Test } from "@nestjs/testing";
-import { DB } from "../../database/database.module";
 import { setupApp } from "../../setup-app";
 import { HealthController } from "./health.controller";
 
@@ -16,7 +16,7 @@ describe("HealthController (HTTP)", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [HealthController],
-      providers: [{ provide: DB, useValue: db }],
+      providers: [{ provide: getDrizzleToken(), useValue: db }],
     }).compile();
 
     app = setupApp(moduleRef.createNestApplication());

@@ -39,11 +39,11 @@ ticket-booking-app/
 │   │   ├── src/
 │   │   │   ├── main.ts              # entrypoint: tạo Nest app và listen
 │   │   │   ├── setup-app.ts         # cấu hình global (prefix /api, versioning v1, pipes, CORS) — dùng chung cho main + test
-│   │   │   ├── app.module.ts        # root module, import các feature module
+│   │   │   ├── app.module.ts        # root module: DrizzleModule.forRoot() + import các feature module
 │   │   │   ├── config/
 │   │   │   │   └── env.ts           # đọc + validate biến môi trường bằng zod
 │   │   │   ├── database/
-│   │   │   │   ├── database.module.ts  # @Global module: postgres client + Drizzle instance (token DB)
+│   │   │   │   ├── database.ts      # type Database của Drizzle instance được inject
 │   │   │   │   ├── schema.ts        # định nghĩa bảng Drizzle (nguồn sự thật của DB schema)
 │   │   │   │   ├── migrations/      # SQL migration do drizzle-kit sinh ra — commit vào git
 │   │   │   │   └── seed.ts          # script seed dữ liệu mẫu
@@ -113,16 +113,20 @@ Request sai sẽ tự động trả về `400` với danh sách lỗi; giá tr�
 
 ### Backend: truy cập database
 
-`DatabaseModule` là module global, cung cấp Drizzle instance qua token `DB`. Inject vào service bằng `@InjectDb()`:
+Dùng [`@nestjs/drizzle`](https://docs.nestjs.com/data/drizzle): `DrizzleModule.forRoot()` trong `app.module.ts`
+đăng ký Drizzle instance global. Inject vào service bằng `@InjectDrizzle()`:
 
 ```ts
-import { type Database, InjectDb } from '../../database/database.module';
+import { InjectDrizzle } from '@nestjs/drizzle';
+import type { Database } from '../../database/database';
 
 @Injectable()
 export class SomeService {
-  constructor(@InjectDb() private readonly db: Database) {}
+  constructor(@InjectDrizzle() private readonly db: Database) {}
 }
 ```
+
+Trong test, mock database bằng `{ provide: getDrizzleToken(), useValue: mockDb }`.
 
 Drizzle được cấu hình `casing: 'snake_case'`: viết field camelCase trong TS, cột trong Postgres là snake_case.
 

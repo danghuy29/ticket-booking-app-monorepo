@@ -40,7 +40,7 @@ Before finishing a task, run `bun run lint:fix && bun run typecheck && bun run t
 - Validate input with the param decorator option, not class-validator/DTO classes:
   `@Body({ schema: createXSchema }) body: CreateXInput`, `@Param('id', { schema: uuidParamSchema }) id: string`.
   The global `StandardSchemaValidationPipe` is registered in `src/setup-app.ts`.
-- DB access: inject with `constructor(@InjectDb() private readonly db: Database)` from `src/database/database.module.ts`. Use `db.transaction()` for multi-step writes.
+- DB access: `@nestjs/drizzle` — `DrizzleModule.forRoot()` in `src/app.module.ts`. Inject with `constructor(@InjectDrizzle() private readonly db: Database)` (`Database` type from `src/database/database.ts`). Mock in tests with `{ provide: getDrizzleToken(), useValue: mockDb }`. Use `db.transaction()` for multi-step writes.
 - **Do not use `import type` for anything injected via constructor** — it erases decorator metadata and breaks DI. (Biome's `useImportType` is disabled in apps/api for this reason.)
 - Throw Nest HTTP exceptions (`NotFoundException`, `ConflictException`, ...) from services; no custom error envelope.
 - Env vars: add to the zod schema in `src/config/env.ts` and to `.env.example`; read via `env.X`, never `process.env` directly.

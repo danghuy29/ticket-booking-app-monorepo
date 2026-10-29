@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { type Database, InjectDb } from "../../database/database.module";
+import { InjectDrizzle } from "@nestjs/drizzle";
+import type { Database } from "../../database/database";
 import { users } from "../../database/schemas/user";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectDb() private readonly db: Database) {}
+  constructor(@InjectDrizzle() private readonly db: Database) {}
 
   // create(createUserDto) {
   //   return "This action adds a new user";
