@@ -118,7 +118,7 @@ Dùng [`@nestjs/drizzle`](https://docs.nestjs.com/data/drizzle): `DrizzleModule.
 
 ```ts
 import { InjectDrizzle } from '@nestjs/drizzle';
-import type { Database } from '../../database/database';
+import type { Database } from '@/database/database';
 
 @Injectable()
 export class SomeService {

@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
+import { env } from "@/config/env";
 import { AppModule } from "./app.module";
-import { env } from "./config/env";
 import { API_PREFIX, DEFAULT_API_VERSION, setupApp } from "./setup-app";
 
 const app = await NestFactory.create(AppModule);

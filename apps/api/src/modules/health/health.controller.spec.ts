@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, mock, test } from "bun:test";
 import type { INestApplication } from "@nestjs/common";
 import { getDrizzleToken } from "@nestjs/drizzle";
 import { Test } from "@nestjs/testing";
-import { setupApp } from "../../setup-app";
+import { setupApp } from "@/setup-app";
 import { HealthController } from "./health.controller";
 
 // Example HTTP-level test: real Nest app + global pipes, with the database mocked.

@@ -6,7 +6,11 @@
     // Bun honours both flags at runtime.
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    // Import alias: `@/x` → `src/x`. Bun resolves `paths` at runtime and in `bun test`.
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src", "drizzle.config.ts"]
 }
