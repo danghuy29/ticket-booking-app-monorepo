@@ -26,7 +26,7 @@ bun run dev                          # chạy song song API + Web
 ```
 
 - Web: http://localhost:5173 — trang chủ hiển thị trạng thái API + DB
-- API: http://localhost:3000/api — health check tại `GET /api/health`
+- API: http://localhost:3000/api/v1 — health check tại `GET /api/v1/health`
 
 ---
 
@@ -38,12 +38,12 @@ ticket-booking-app/
 │   ├── api/                         # @ticket/api — NestJS backend
 │   │   ├── src/
 │   │   │   ├── main.ts              # entrypoint: tạo Nest app và listen
-│   │   │   ├── setup-app.ts         # cấu hình global (prefix /api, pipes, CORS) — dùng chung cho main + test
-│   │   │   ├── app.module.ts        # root module, import các feature module
+│   │   │   ├── setup-app.ts         # cấu hình global (prefix /api, versioning v1, pipes, CORS) — dùng chung cho main + test
+│   │   │   ├── app.module.ts        # root module: DrizzleModule.forRoot() + import các feature module
 │   │   │   ├── config/
 │   │   │   │   └── env.ts           # đọc + validate biến môi trường bằng zod
 │   │   │   ├── database/
-│   │   │   │   ├── database.module.ts  # @Global module: postgres client + Drizzle instance (token DB)
+│   │   │   │   ├── database.ts      # type Database của Drizzle instance được inject
 │   │   │   │   ├── schema.ts        # định nghĩa bảng Drizzle (nguồn sự thật của DB schema)
 │   │   │   │   ├── migrations/      # SQL migration do drizzle-kit sinh ra — commit vào git
 │   │   │   │   └── seed.ts          # script seed dữ liệu mẫu
@@ -113,16 +113,20 @@ Request sai sẽ tự động trả về `400` với danh sách lỗi; giá tr�
 
 ### Backend: truy cập database
 
-`DatabaseModule` là module global, cung cấp Drizzle instance qua token `DB`. Inject vào service bằng `@InjectDb()`:
+Dùng [`@nestjs/drizzle`](https://docs.nestjs.com/data/drizzle): `DrizzleModule.forRoot()` trong `app.module.ts`
+đăng ký Drizzle instance global. Inject vào service bằng `@InjectDrizzle()`:
 
 ```ts
-import { type Database, InjectDb } from '../../database/database.module';
+import { InjectDrizzle } from '@nestjs/drizzle';
+import type { Database } from '@/database/database';
 
 @Injectable()
 export class SomeService {
-  constructor(@InjectDb() private readonly db: Database) {}
+  constructor(@InjectDrizzle() private readonly db: Database) {}
 }
 ```
+
+Trong test, mock database bằng `{ provide: getDrizzleToken(), useValue: mockDb }`.
 
 Drizzle được cấu hình `casing: 'snake_case'`: viết field camelCase trong TS, cột trong Postgres là snake_case.
 
@@ -130,7 +134,7 @@ Drizzle được cấu hình `casing: 'snake_case'`: viết field camelCase tron
 
 - `lib/api-client.ts`: `api.get<T>()`, `api.post<T>()` — tự parse JSON, ném `ApiError` (có `status`, `body`) khi lỗi.
 - Mỗi feature có file `features/<name>/api.ts` chứa query key + hook TanStack Query (xem `features/health/api.ts`).
-- Dev: gọi `/api/...`, Vite proxy sang NestJS → không cần lo CORS. Production: đặt `VITE_API_BASE_URL`.
+- Dev: gọi `/api/v1/...`, Vite proxy sang NestJS → không cần lo CORS. Production: đặt `VITE_API_BASE_URL`.
 
 ---
 
@@ -183,7 +187,7 @@ Thêm dependency cho một workspace: `cd apps/web && bun add <pkg>`.
 | `DATABASE_URL` | —                       | bắt buộc                             |
 | `CORS_ORIGINS` | `http://localhost:5173` | phân tách bằng dấu phẩy              |
 
-**`apps/web/.env`** (tuỳ chọn): `VITE_API_BASE_URL` — mặc định `/api`.
+**`apps/web/.env`** (tuỳ chọn): `VITE_API_BASE_URL` — mặc định `/api/v1`.
 
 ---
 

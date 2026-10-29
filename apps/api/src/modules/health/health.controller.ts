@@ -1,11 +1,12 @@
 import { Controller, Get, ServiceUnavailableException } from "@nestjs/common";
+import { InjectDrizzle } from "@nestjs/drizzle";
 import type { HealthResponse } from "@ticket/shared";
 import { sql } from "drizzle-orm";
-import { type Database, InjectDb } from "../../database/database.module";
+import type { Database } from "@/database/database";
 
 @Controller("health")
 export class HealthController {
-  constructor(@InjectDb() private readonly db: Database) {}
+  constructor(@InjectDrizzle() private readonly db: Database) {}
 
   @Get()
   async check(): Promise<HealthResponse> {

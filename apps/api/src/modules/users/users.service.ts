@@ -1,13 +1,18 @@
 import { Injectable } from "@nestjs/common";
+import { InjectDrizzle } from "@nestjs/drizzle";
+import type { Database } from "@/database/database";
+import { users } from "@/database/schemas/user";
 
 @Injectable()
 export class UsersService {
+  constructor(@InjectDrizzle() private readonly db: Database) {}
+
   // create(createUserDto) {
   //   return "This action adds a new user";
   // }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return this.db.select().from(users);
   }
 
   findOne(id: number) {

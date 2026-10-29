@@ -1,6 +1,6 @@
 import type { ApiErrorBody } from "@ticket/shared";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
 
 export class ApiError extends Error {
   readonly status: number;
@@ -29,7 +29,10 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 }
 
 export const api = {
-  get: <T>(path: string) => apiFetch<T>(path),
-  post: <T>(path: string, body: unknown) =>
-    apiFetch<T>(path, { method: "POST", body: JSON.stringify(body) }),
+  get<T>(path: string) {
+    return apiFetch<T>(path);
+  },
+  post<T>(path: string, body: unknown) {
+    return apiFetch<T>(path, { method: "POST", body: JSON.stringify(body) });
+  },
 };

@@ -25,7 +25,18 @@
       "linter": {
         "rules": {
           "style": {
-            "useImportType": "off"
+            "useImportType": "off",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["../**"],
+                    "message": "Use the `@/` alias (→ apps/api/src) instead of parent-relative imports."
+                  }
+                ]
+              }
+            }
           }
         }
       }

@@ -40,11 +40,12 @@ Before finishing a task, run `bun run lint:fix && bun run typecheck && bun run t
 - Validate input with the param decorator option, not class-validator/DTO classes:
   `@Body({ schema: createXSchema }) body: CreateXInput`, `@Param('id', { schema: uuidParamSchema }) id: string`.
   The global `StandardSchemaValidationPipe` is registered in `src/setup-app.ts`.
-- DB access: inject with `constructor(@InjectDb() private readonly db: Database)` from `src/database/database.module.ts`. Use `db.transaction()` for multi-step writes.
+- DB access: `@nestjs/drizzle` — `DrizzleModule.forRoot()` in `src/app.module.ts`. Inject with `constructor(@InjectDrizzle() private readonly db: Database)` (`Database` type from `src/database/database.ts`). Mock in tests with `{ provide: getDrizzleToken(), useValue: mockDb }`. Use `db.transaction()` for multi-step writes.
+- Imports use the `@/` alias (→ `apps/api/src`, set in `apps/api/tsconfig.json` `paths`): `import { env } from "@/config/env"`. Never use `../`; `./` only for files in the same folder. Biome (`noRestrictedImports`) rejects `../` imports in apps/api.
 - **Do not use `import type` for anything injected via constructor** — it erases decorator metadata and breaks DI. (Biome's `useImportType` is disabled in apps/api for this reason.)
 - Throw Nest HTTP exceptions (`NotFoundException`, `ConflictException`, ...) from services; no custom error envelope.
 - Env vars: add to the zod schema in `src/config/env.ts` and to `.env.example`; read via `env.X`, never `process.env` directly.
-- All routes are under the `/api` prefix.
+- All routes are under `/api/v1` (global prefix `api` + URI versioning, default version `"1"` set in `setup-app.ts`). Breaking change → add a v2 controller/route with `version: "2"`, keep v1 until clients migrate. Tests use `${baseUrl}/api/v1`.
 - Tests: `bun:test` + `@nestjs/testing`. HTTP tests build the app with `setupApp()` and mock providers (see `modules/health/health.controller.spec.ts`). Import `'reflect-metadata'` at the top of spec files.
 
 ### Database (Drizzle)
@@ -56,7 +57,7 @@ Before finishing a task, run `bun run lint:fix && bun run typecheck && bun run t
 
 ### Web (apps/web)
 - Route-level components in `src/pages/`; feature code (API hooks, feature components) in `src/features/<feature>/`; shared UI in `src/components/`.
-- All HTTP goes through `api` in `src/lib/api-client.ts` (paths relative to `/api`, e.g. `api.get('/health')`).
+- All HTTP goes through `api` in `src/lib/api-client.ts` (paths relative to `/api/v1`, e.g. `api.get('/health')`).
 - Server state = TanStack Query only. Define a query-key factory per feature (`xKeys`) in `features/<feature>/api.ts`; invalidate keys after mutations.
 - Routes are declared in `src/app/router.tsx` (`createBrowserRouter`); import from `react-router`, not `react-router-dom`.
 - `tsconfig.app.json` uses `verbatimModuleSyntax` + `erasableSyntaxOnly`: use `import type` for types, and no enums / constructor parameter properties.
