@@ -1,0 +1,585 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "4fcbfb0d-2a51-46d6-bb12-3a9da1180128",
+  "prevIds": ["160603dc-e81f-42fd-bf42-905b1e169855"],
+  "footprints": [
+    {
+      "statementType": "create_enum",
+      "statementTarget": ["enum", "public", "auth_provider"],
+      "writes": [
+        "s|enum|public.auth_provider",
+        "n|enum|public.auth_provider",
+        "e|enum|public.auth_provider",
+        "n|type|public.auth_provider"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_enum",
+      "statementTarget": ["enum", "public", "user_role"],
+      "writes": [
+        "s|enum|public.user_role",
+        "n|enum|public.user_role",
+        "e|enum|public.user_role",
+        "n|type|public.user_role"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "accounts"],
+      "writes": [
+        "s|tbl|public.accounts",
+        "n|tbl|public.accounts",
+        "e|tbl|public.accounts",
+        "n|rel|public.accounts",
+        "n|type|public.accounts",
+        "n|rel|public.accounts_pkey",
+        "n|rel|public.accounts_provider_provider_account_id_unique",
+        "n|rel|public.accounts_user_id_provider_unique"
+      ],
+      "reads": ["n|sch|public", "n|enum|public.auth_provider"]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": ["column", "public", "sessions", "account_id"],
+      "writes": [
+        "s|col|public.sessions.account_id",
+        "n|col|public.sessions.account_id",
+        "e|col|public.sessions.account_id"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public"]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": ["column", "public", "users", "role"],
+      "writes": ["s|col|public.users.role", "n|col|public.users.role", "e|col|public.users.role"],
+      "reads": ["n|tbl|public.users", "n|sch|public", "n|enum|public.user_role"]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "users", "phone"],
+      "writes": ["s|colprop|public.users.phone.notNull"],
+      "reads": ["n|tbl|public.users", "n|sch|public", "n|col|public.users.phone"],
+      "sqlHash": "81a7f14dc4b9dee9"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "sessions", "expires_at"],
+      "writes": [
+        "s|colprop|public.sessions.expires_at.type",
+        "s|colprop|public.sessions.expires_at.default"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public", "n|col|public.sessions.expires_at"],
+      "sqlHash": "4ce299b0f94fc26f"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "sessions", "last_used_at"],
+      "writes": [
+        "s|colprop|public.sessions.last_used_at.type",
+        "s|colprop|public.sessions.last_used_at.default"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public", "n|col|public.sessions.last_used_at"],
+      "sqlHash": "6a37cf84419649bb"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "users", "email_verified_at"],
+      "writes": [
+        "s|colprop|public.users.email_verified_at.type",
+        "s|colprop|public.users.email_verified_at.default"
+      ],
+      "reads": ["n|tbl|public.users", "n|sch|public", "n|col|public.users.email_verified_at"],
+      "sqlHash": "d7459b6e511b1658"
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "users", "disabled_at"],
+      "writes": [
+        "s|colprop|public.users.disabled_at.type",
+        "s|colprop|public.users.disabled_at.default"
+      ],
+      "reads": ["n|tbl|public.users", "n|sch|public", "n|col|public.users.disabled_at"],
+      "sqlHash": "bbc8d0ca61075cef"
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": ["index", "public", "sessions", "sessions_user_id_idx"],
+      "writes": [
+        "s|idx|public.sessions_user_id_idx",
+        "n|idx|public.sessions_user_id_idx",
+        "e|idx|public.sessions_user_id_idx",
+        "n|rel|public.sessions_user_id_idx"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public", "n|col|public.sessions.user_id"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": ["index", "public", "sessions", "sessions_account_id_idx"],
+      "writes": [
+        "s|idx|public.sessions_account_id_idx",
+        "n|idx|public.sessions_account_id_idx",
+        "e|idx|public.sessions_account_id_idx",
+        "n|rel|public.sessions_account_id_idx"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public", "n|col|public.sessions.account_id"]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": ["index", "public", "sessions", "sessions_expires_at_idx"],
+      "writes": [
+        "s|idx|public.sessions_expires_at_idx",
+        "n|idx|public.sessions_expires_at_idx",
+        "e|idx|public.sessions_expires_at_idx",
+        "n|rel|public.sessions_expires_at_idx"
+      ],
+      "reads": ["n|tbl|public.sessions", "n|sch|public", "n|col|public.sessions.expires_at"]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "accounts"],
+      "writes": [
+        "s|fk|public.accounts.accounts_user_id_users_id_fkey",
+        "n|fk|public.accounts.accounts_user_id_users_id_fkey",
+        "e|fk|public.accounts.accounts_user_id_users_id_fkey",
+        "n|con|public.accounts.accounts_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.accounts",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.accounts.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "sessions"],
+      "writes": [
+        "s|fk|public.sessions.sessions_account_id_accounts_id_fkey",
+        "n|fk|public.sessions.sessions_account_id_accounts_id_fkey",
+        "e|fk|public.sessions.sessions_account_id_accounts_id_fkey",
+        "n|con|public.sessions.sessions_account_id_accounts_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sessions",
+        "n|sch|public",
+        "n|tbl|public.accounts",
+        "n|sch|public",
+        "n|col|public.sessions.account_id",
+        "n|col|public.accounts.id",
+        "e|uniqueness|public.accounts.id"
+      ]
+    },
+    {
+      "statementType": "recreate_fk",
+      "statementTarget": ["table", "public", "sessions"],
+      "writes": [
+        "s|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "n|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "e|fk|public.sessions.sessions_user_id_users_id_fkey",
+        "n|con|public.sessions.sessions_user_id_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sessions",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.sessions.user_id",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ],
+      "sqlHash": "cf18a4d7310e6b73"
+    },
+    {
+      "statementType": "add_check",
+      "statementTarget": ["table", "public", "users"],
+      "writes": [
+        "s|ck|public.users.users_email_lowercase_check",
+        "n|ck|public.users.users_email_lowercase_check",
+        "e|ck|public.users.users_email_lowercase_check",
+        "n|con|public.users.users_email_lowercase_check"
+      ],
+      "reads": ["n|tbl|public.users", "n|sch|public", "n|col|public.users.email"]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "accounts",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "auth_provider",
+        "values": ["credential", "google", "github"],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "user_role",
+        "values": ["customer", "admin"],
+        "entityType": "enums"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "user_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "provider",
+        "type": "auth_provider",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "provider_account_id",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "password_hash",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sessions",
+        "name": "account_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "users",
+        "name": "role",
+        "type": "user_role",
+        "typeSchema": "public",
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'customer'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sessions",
+        "name": "sessions_user_id_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "user_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sessions",
+        "name": "sessions_account_id_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "account_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sessions",
+        "name": "sessions_expires_at_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "expires_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "accounts_user_id_users_id_fkey",
+        "nameExplicit": false,
+        "columns": ["user_id"],
+        "schemaTo": "public",
+        "tableTo": "users",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sessions",
+        "name": "sessions_account_id_accounts_id_fkey",
+        "nameExplicit": false,
+        "columns": ["account_id"],
+        "schemaTo": "public",
+        "tableTo": "accounts",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "accounts_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "accounts_provider_provider_account_id_unique",
+        "nameExplicit": true,
+        "columns": ["provider", "provider_account_id"],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "accounts_user_id_provider_unique",
+        "nameExplicit": true,
+        "columns": ["user_id", "provider"],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "accounts",
+        "name": "accounts_provider_shape_check",
+        "value": "(\"provider\" = 'credential' and \"provider_account_id\" is null and \"password_hash\" is not null)\n       or (\"provider\" <> 'credential' and \"provider_account_id\" is not null and \"password_hash\" is null)",
+        "entityType": "checks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "users",
+        "name": "users_email_lowercase_check",
+        "value": "\"email\" = lower(\"email\")",
+        "entityType": "checks"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"users\",\"phone\"]",
+      "set": {
+        "notNull": false
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"sessions\",\"expires_at\"]",
+      "set": {
+        "type": "timestamp with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"sessions\",\"last_used_at\"]",
+      "set": {
+        "type": "timestamp with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"users\",\"email_verified_at\"]",
+      "set": {
+        "type": "timestamp with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"users\",\"disabled_at\"]",
+      "set": {
+        "type": "timestamp with time zone"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "fks\u0000[\"public\",\"sessions\",\"sessions_user_id_users_id_fkey\"]",
+      "set": {
+        "onDelete": "CASCADE"
+      }
+    }
+  ]
+}

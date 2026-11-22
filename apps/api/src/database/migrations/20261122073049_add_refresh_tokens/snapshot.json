@@ -1,0 +1,386 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "130e425d-68be-4d57-9557-e7d47ef2dd1e",
+  "prevIds": [
+    "4fcbfb0d-2a51-46d6-bb12-3a9da1180128"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "refresh_tokens"
+      ],
+      "writes": [
+        "s|tbl|public.refresh_tokens",
+        "n|tbl|public.refresh_tokens",
+        "e|tbl|public.refresh_tokens",
+        "n|rel|public.refresh_tokens",
+        "n|type|public.refresh_tokens",
+        "n|rel|public.refresh_tokens_pkey",
+        "n|rel|public.refresh_tokens_token_hash_key",
+        "n|rel|public.refresh_tokens_replaced_by_id_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "refresh_tokens",
+        "refresh_tokens_session_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.refresh_tokens_session_id_idx",
+        "n|idx|public.refresh_tokens_session_id_idx",
+        "e|idx|public.refresh_tokens_session_id_idx",
+        "n|rel|public.refresh_tokens_session_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.refresh_tokens",
+        "n|sch|public",
+        "n|col|public.refresh_tokens.session_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "refresh_tokens",
+        "refresh_tokens_expires_at_idx"
+      ],
+      "writes": [
+        "s|idx|public.refresh_tokens_expires_at_idx",
+        "n|idx|public.refresh_tokens_expires_at_idx",
+        "e|idx|public.refresh_tokens_expires_at_idx",
+        "n|rel|public.refresh_tokens_expires_at_idx"
+      ],
+      "reads": [
+        "n|tbl|public.refresh_tokens",
+        "n|sch|public",
+        "n|col|public.refresh_tokens.expires_at"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "refresh_tokens"
+      ],
+      "writes": [
+        "s|fk|public.refresh_tokens.refresh_tokens_session_id_sessions_id_fkey",
+        "n|fk|public.refresh_tokens.refresh_tokens_session_id_sessions_id_fkey",
+        "e|fk|public.refresh_tokens.refresh_tokens_session_id_sessions_id_fkey",
+        "n|con|public.refresh_tokens.refresh_tokens_session_id_sessions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.refresh_tokens",
+        "n|sch|public",
+        "n|tbl|public.sessions",
+        "n|sch|public",
+        "n|col|public.refresh_tokens.session_id",
+        "n|col|public.sessions.id",
+        "e|uniqueness|public.sessions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "refresh_tokens"
+      ],
+      "writes": [
+        "s|fk|public.refresh_tokens.refresh_tokens_replaced_by_id_refresh_tokens_id_fkey",
+        "n|fk|public.refresh_tokens.refresh_tokens_replaced_by_id_refresh_tokens_id_fkey",
+        "e|fk|public.refresh_tokens.refresh_tokens_replaced_by_id_refresh_tokens_id_fkey",
+        "n|con|public.refresh_tokens.refresh_tokens_replaced_by_id_refresh_tokens_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.refresh_tokens",
+        "n|sch|public",
+        "n|tbl|public.refresh_tokens",
+        "n|sch|public",
+        "n|col|public.refresh_tokens.replaced_by_id",
+        "n|col|public.refresh_tokens.id",
+        "e|uniqueness|public.refresh_tokens.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "refresh_tokens",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "session_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "token_hash",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "expires_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "used_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "replaced_by_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_session_id_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "session_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_expires_at_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "expires_at",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "concurrently": false,
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_session_id_sessions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "session_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "sessions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_replaced_by_id_refresh_tokens_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "replaced_by_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "refresh_tokens",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_token_hash_key",
+        "nameExplicit": false,
+        "columns": [
+          "token_hash"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "refresh_tokens",
+        "name": "refresh_tokens_replaced_by_id_key",
+        "nameExplicit": false,
+        "columns": [
+          "replaced_by_id"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}

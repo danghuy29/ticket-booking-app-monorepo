@@ -44,8 +44,8 @@ ticket-booking-app/
 │   │   │   │   └── env.ts           # đọc + validate biến môi trường bằng zod
 │   │   │   ├── database/
 │   │   │   │   ├── database.ts      # type Database của Drizzle instance được inject
-│   │   │   │   ├── schema.ts        # định nghĩa bảng Drizzle (nguồn sự thật của DB schema)
-│   │   │   │   ├── migrations/      # SQL migration do drizzle-kit sinh ra — commit vào git
+│   │   │   │   ├── schemas/         # mỗi bảng một file (snakeCase.table) + relations.ts (defineRelations)
+│   │   │   │   ├── migrations/      # mỗi migration một thư mục (migration.sql + snapshot.json) — commit vào git
 │   │   │   │   └── seed.ts          # script seed dữ liệu mẫu
 │   │   │   └── modules/             # feature modules (mỗi feature 1 thư mục)
 │   │   │       └── health/          # module mẫu: controller + test HTTP
@@ -128,7 +128,7 @@ export class SomeService {
 
 Trong test, mock database bằng `{ provide: getDrizzleToken(), useValue: mockDb }`.
 
-Drizzle được cấu hình `casing: 'snake_case'`: viết field camelCase trong TS, cột trong Postgres là snake_case.
+Project dùng Drizzle v1 RC (giống docs NestJS). Bảng khai báo bằng `snakeCase.table(...)`: viết field camelCase trong TS, cột trong Postgres là snake_case. Quan hệ khai báo bằng `defineRelations()` trong `schemas/relations.ts`.
 
 ### Frontend: gọi API
 
@@ -140,10 +140,10 @@ Drizzle được cấu hình `casing: 'snake_case'`: viết field camelCase tron
 
 ## Database workflow (Drizzle)
 
-1. Khai báo / sửa bảng trong `apps/api/src/database/schema.ts` (có helper `timestamps` cho `createdAt/updatedAt`).
-2. `bun run db:generate` — sinh file SQL migration mới vào `apps/api/src/database/migrations/`.
+1. Khai báo / sửa bảng trong `apps/api/src/database/schemas/` (mỗi bảng một file, export qua `index.ts`; có helper `timestamps` cho `createdAt/updatedAt`).
+2. `bun run db:generate` — sinh thư mục migration mới vào `apps/api/src/database/migrations/`.
 3. Review file SQL vừa sinh, rồi `bun run db:migrate` để áp dụng.
-4. Commit cả `schema.ts` và thư mục `migrations/`.
+4. Commit cả `schemas/` và thư mục `migrations/`.
 
 Các lệnh khác:
 
@@ -194,7 +194,7 @@ Thêm dependency cho một workspace: `cd apps/web && bun add <pkg>`.
 ## Thêm một feature mới (ví dụ: `events`)
 
 1. **Shared**: tạo `packages/shared/src/schemas/event.ts` (zod schema input + interface DTO), export trong `index.ts`.
-2. **DB**: thêm bảng `events` vào `schema.ts` → `bun run db:generate` → `bun run db:migrate`.
+2. **DB**: thêm file `schemas/event.ts` (export qua `index.ts`) → `bun run db:generate` → `bun run db:migrate`.
 3. **API**: tạo `apps/api/src/modules/events/` gồm `events.module.ts`, `events.controller.ts`,
    `events.service.ts` (+ `*.spec.ts`), rồi import module vào `app.module.ts`.
 4. **Web**: tạo `apps/web/src/features/events/api.ts` (hooks), page trong `pages/`, khai báo route trong `app/router.tsx`.

@@ -8,7 +8,7 @@ Fullstack ticket booking app. Bun workspaces monorepo. See README.md for the ful
 - `apps/api` (`@ticket/api`): NestJS 12 (ESM), run directly from TS source by Bun — no `nest` CLI, no build step
 - `apps/web` (`@ticket/web`): React 19, Vite 8, React Router 8 (`react-router` package, data router), TanStack Query 5
 - `packages/shared` (`@ticket/shared`): zod 4 schemas + TS types shared by FE and BE, consumed as TS source (no build)
-- DB: PostgreSQL 18 via `docker-compose.yml`, Drizzle ORM (`postgres` driver) + drizzle-kit migrations
+- DB: PostgreSQL 18 via `docker-compose.yml`, Drizzle ORM **v1 RC** (`drizzle-orm@1.0.0-rc.5`, `postgres` driver) + drizzle-kit (same version) migrations. Docs: Drizzle v1 / RQB v2, not v0.x.
 - Lint/format: Biome (double quotes, semicolons, trailing commas, width 100). No ESLint/Prettier.
 
 ## Commands (run from repo root)
@@ -19,7 +19,7 @@ bun run typecheck        # tsc in all workspaces
 bun run test             # bun test in all workspaces
 bun run lint:fix         # Biome format + lint + organize imports
 bun run db:up            # start Postgres container
-bun run db:generate      # generate SQL migration from schema.ts
+bun run db:generate      # generate SQL migration from schemas/
 bun run db:migrate       # apply migrations
 bun run --filter @ticket/api test   # single workspace
 cd apps/api && bun test src/modules/health   # single test path
@@ -49,10 +49,11 @@ Before finishing a task, run `bun run lint:fix && bun run typecheck && bun run t
 - Tests: `bun:test` + `@nestjs/testing`. HTTP tests build the app with `setupApp()` and mock providers (see `modules/health/health.controller.spec.ts`). Import `'reflect-metadata'` at the top of spec files.
 
 ### Database (Drizzle)
-- Schema source of truth: `apps/api/src/database/schema.ts` (split into files if large and re-export from it).
-- Write columns camelCase without explicit names (`price: integer().notNull()`); `casing: 'snake_case'` maps them. Spread `...timestamps` into every table.
+- Schema source of truth: `apps/api/src/database/schemas/` — one file per table, re-exported from `schemas/index.ts`.
+- Relations: `defineRelations()` in `schemas/relations.ts`, which imports `* as schema` from `schemas/index.ts`. Never re-export `relations.ts` from `index.ts` (circular import). The `relations` object is what `DrizzleModule.forRoot()` / `drizzle()` receive and what `Database` is typed with.
+- Define tables with `snakeCase.table(...)` from `drizzle-orm/pg-core` (not `pgTable`): Drizzle v1 has no global `casing` option, so `pgTable` would create camelCase columns. Write columns camelCase without explicit names (`price: integer().notNull()`). Spread `...timestamps` into every table.
 - IDs: `uuid().primaryKey().defaultRandom()`. Money: integer in the smallest currency unit, never float/real.
-- Schema change flow: edit `schema.ts` → `bun run db:generate` → review the SQL → `bun run db:migrate`. Never hand-edit already-applied migrations or files in `migrations/meta`.
+- Schema change flow: edit `schemas/*.ts` → `bun run db:generate` → review the SQL → `bun run db:migrate`. Migrations are folders `migrations/<timestamp>_<name>/` (`migration.sql` + `snapshot.json`); never hand-edit an applied one.
 - Export row types: `export type XRow = typeof x.$inferSelect`.
 
 ### Web (apps/web)

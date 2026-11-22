@@ -1,5 +1,5 @@
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type * as schema from "./schemas";
+import type { relations } from "./schemas/relations";
 
 /** Type of the Drizzle database injected with `@InjectDrizzle()` (registered in `app.module.ts`). */
-export type Database = PostgresJsDatabase<typeof schema>;
+export type Database = PostgresJsDatabase<typeof relations>;
