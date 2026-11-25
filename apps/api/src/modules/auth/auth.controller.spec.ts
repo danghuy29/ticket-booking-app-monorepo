@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { afterAll, beforeAll, beforeEach, describe, expect, mock, test } from "bun:test";
-import { PasswordHasher } from "@nestjs/authentication";
 import type { INestApplication } from "@nestjs/common";
 import { getDrizzleToken } from "@nestjs/drizzle";
 import { Test } from "@nestjs/testing";
@@ -45,7 +44,6 @@ const tx = {
   }),
 };
 const db = { transaction: mock(async (fn: (t: typeof tx) => unknown) => fn(tx)) };
-const passwordHasher = new PasswordHasher({ logN: 10 });
 
 describe("AuthController (HTTP)", () => {
   let app: INestApplication;
@@ -54,11 +52,7 @@ describe("AuthController (HTTP)", () => {
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [
-        AuthService,
-        { provide: getDrizzleToken(), useValue: db },
-        { provide: PasswordHasher, useValue: passwordHasher },
-      ],
+      providers: [AuthService, { provide: getDrizzleToken(), useValue: db }],
     }).compile();
 
     app = setupApp(moduleRef.createNestApplication());
@@ -101,7 +95,8 @@ describe("AuthController (HTTP)", () => {
     expect(accountInsert?.table).toBe(accounts);
     expect(accountInsert?.values).toMatchObject({ userId: userRow.id, provider: "credential" });
     const hash = accountInsert?.values.passwordHash as string;
-    expect(await passwordHasher.verify("correct horse", hash)).toBe(true);
+    expect(hash).toStartWith("$argon2id$");
+    expect(await Bun.password.verify("correct horse", hash)).toBe(true);
   });
 
   test("POST /auth/sign-up returns 400 for an invalid body", async () => {

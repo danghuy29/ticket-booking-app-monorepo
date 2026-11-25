@@ -1,4 +1,3 @@
-import { PasswordHasher } from "@nestjs/authentication";
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectDrizzle } from "@nestjs/drizzle";
 import type { RegisterInput, UserDto } from "@ticket/shared";
@@ -15,14 +14,11 @@ const conflictMessages: Record<string, string> = {
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectDrizzle() private readonly db: Database,
-    private readonly passwordHasher: PasswordHasher,
-  ) {}
+  constructor(@InjectDrizzle() private readonly db: Database) {}
 
   async register({ name, email, phone, password }: RegisterInput): Promise<UserDto> {
-    // Hash before the transaction so scrypt (~100ms) doesn't hold a connection open.
-    const passwordHash = await this.passwordHasher.hash(password);
+    // argon2id, same as the seed. Hashed before the transaction so it doesn't hold a connection.
+    const passwordHash = await Bun.password.hash(password);
 
     try {
       const user = await this.db.transaction(async (tx) => {
